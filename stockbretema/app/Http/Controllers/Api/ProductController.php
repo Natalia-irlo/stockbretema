@@ -48,12 +48,15 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product, $id)
     {
+        $product = Product::find($id);
 
-        $product->update($request->all());
+        $product->name=$request->name;
+        $product->description=$request->description;
+        $product->stock=$request->stock;
 
-        return $product;
+        $product->save();
     }
 
     /**

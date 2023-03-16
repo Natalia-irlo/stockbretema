@@ -28,5 +28,3 @@ Route::controller(ProductController::class)->group(function (){
     Route::delete('/product/{id}', 'destroy');
 
 });
-
-Route::get('/users', 'UserController@index');
