@@ -1,27 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 /**
  * Class ProductController
  * @package App\Http\Controllers
  */
-class ProductController extends Controller
+class ProductController2 extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $products = Product::paginate();
-
-        return view('product.index', compact('products'))
-            ->with('i', (request()->input('page', 1) - 1) * $products->perPage());
+        $products = Product::all();
+        echo $products;
+        return $products;
     }
 
     /**
@@ -29,11 +28,11 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $product = new Product();
-        return view('product.create', compact('product'));
-    }
+    // public function create()
+    // {
+    //     $product = new Product();
+    //     return view('product.create', compact('product'));
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -43,12 +42,17 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate(Product::$rules);
+        // creamos una instancia del modelo producto
+        $product = new Product();
 
-        $product = Product::create($request->all());
+        // asignamos al objeto product los valores correspondientes de $request (objeto que viene del form de frontend)
+        $product->name=$request->name;
+        $product->description=$request->description;
+        $product->stock=$request->stock;
+        
+        //guardamos el objeto product en la db
+        $product->save();
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product created successfully.');
     }
 
     /**
@@ -61,7 +65,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
-        return view('product.show', compact('product'));
+        return $product;
     }
 
     /**
@@ -86,7 +90,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        request()->validate(Product::$rules);
+        // request()->validate(Product::$rules);
 
         $product->update($request->all());
 
